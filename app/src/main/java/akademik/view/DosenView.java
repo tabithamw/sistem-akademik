@@ -1,14 +1,13 @@
 package akademik.view;
 
 import akademik.model.Dosen;
+import akademik.viewmodel.DosenViewModel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -19,10 +18,13 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 /**
- * View untuk mengelola data Dosen
- * Menggunakan JavaFX components tanpa FXML
+ * View untuk mengelola data Dosen dengan MVVM pattern
+ * Menggunakan property binding untuk reactive UI
  */
 public class DosenView extends BorderPane {
+
+    // ViewModel instance
+    private final DosenViewModel viewModel;
 
     // Form components
     private TextField nppField;
@@ -39,22 +41,21 @@ public class DosenView extends BorderPane {
     private Button clearButton;
     private Button refreshButton;
 
-    // Validation labels
+    // Status components
     private Label validationLabel;
+    private ProgressIndicator loadingIndicator;
 
     public DosenView() {
+        // Initialize ViewModel
+        this.viewModel = new DosenViewModel();
+
         initializeComponents();
         setupLayout();
+        setupPropertyBindings();
         setupEventHandlers();
         setupStyling();
-
-        // Load initial data (temporary - will be moved to ViewModel later)
-        loadSampleData();
     }
 
-    /**
-     * Initialize all UI components
-     */
     private void initializeComponents() {
         // Form fields
         nppField = new TextField();
@@ -75,11 +76,9 @@ public class DosenView extends BorderPane {
 
         updateButton = new Button("📝 Update");
         updateButton.getStyleClass().addAll("btn", "btn-secondary");
-        updateButton.setDisable(true);
 
-        deleteButton = new Button("🗑️ Hapus");
+        deleteButton = new Button("🗑 Hapus");
         deleteButton.getStyleClass().addAll("btn", "btn-danger");
-        deleteButton.setDisable(true);
 
         clearButton = new Button("🔄 Bersihkan");
         clearButton.getStyleClass().addAll("btn", "btn-outline");
@@ -87,74 +86,52 @@ public class DosenView extends BorderPane {
         refreshButton = new Button("↻ Refresh");
         refreshButton.getStyleClass().addAll("btn", "btn-outline");
 
-        // Validation label
+        // Status components
         validationLabel = new Label();
         validationLabel.getStyleClass().add("validation-message");
-        validationLabel.setVisible(false);
+        validationLabel.setWrapText(true);
+
+        loadingIndicator = new ProgressIndicator();
+        loadingIndicator.setPrefSize(24, 24);
+        loadingIndicator.setVisible(false);
 
         // Table
         setupTable();
     }
 
-    /**
-     * Setup table view with columns
-     */
     private void setupTable() {
         dosenTable = new TableView<>();
         dosenTable.getStyleClass().add("data-table");
 
-        // NPP Column
+        // Setup columns
         TableColumn<Dosen, String> nppColumn = new TableColumn<>("NPP");
         nppColumn.setCellValueFactory(new PropertyValueFactory<>("npp"));
         nppColumn.setPrefWidth(120);
-        nppColumn.getStyleClass().add("table-column");
 
-        // Nama Column
         TableColumn<Dosen, String> namaColumn = new TableColumn<>("Nama Dosen");
         namaColumn.setCellValueFactory(new PropertyValueFactory<>("nama"));
         namaColumn.setPrefWidth(250);
-        namaColumn.getStyleClass().add("table-column");
 
-        // No HP Column
         TableColumn<Dosen, String> noHpColumn = new TableColumn<>("No. HP");
         noHpColumn.setCellValueFactory(new PropertyValueFactory<>("noHp"));
         noHpColumn.setPrefWidth(150);
-        noHpColumn.getStyleClass().add("table-column");
 
-        // Add columns to table
         dosenTable.getColumns().addAll(nppColumn, namaColumn, noHpColumn);
-
-        // Table properties
-        dosenTable.setRowFactory(tv -> {
-            TableRow<Dosen> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && !row.isEmpty()) {
-                    selectDosen(row.getItem());
-                }
-            });
-            return row;
-        });
-
-        // Auto resize columns
         dosenTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
-    /**
-     * Setup layout structure
-     */
     private void setupLayout() {
-        // Left side - Form
+        // Form section
         VBox formSection = createFormSection();
 
-        // Right side - Table
+        // Table section
         VBox tableSection = createTableSection();
 
-        // Split the content
+        // Main content
         HBox mainContent = new HBox(20);
         mainContent.setPadding(new Insets(20));
         mainContent.getChildren().addAll(formSection, tableSection);
 
-        // Set preferred widths
         HBox.setHgrow(formSection, Priority.NEVER);
         HBox.setHgrow(tableSection, Priority.ALWAYS);
         formSection.setPrefWidth(350);
@@ -162,9 +139,6 @@ public class DosenView extends BorderPane {
         setCenter(mainContent);
     }
 
-    /**
-     * Create form section
-     */
     private VBox createFormSection() {
         VBox formSection = new VBox(15);
         formSection.getStyleClass().add("form-section");
@@ -174,10 +148,9 @@ public class DosenView extends BorderPane {
         Label formTitle = new Label("📝 Form Data Dosen");
         formTitle.getStyleClass().add("section-title");
 
-        // Form fields
+        // Form fields with labels
         VBox fieldsBox = new VBox(10);
 
-        // NPP field with label
         Label nppLabel = new Label("NPP *");
         nppLabel.getStyleClass().add("field-label");
 
@@ -193,24 +166,26 @@ public class DosenView extends BorderPane {
             noHpLabel, noHpField
         );
 
-        // Validation message
-        validationLabel.setWrapText(true);
+        // Status section
+        HBox statusBox = new HBox(10);
+        statusBox.setAlignment(Pos.CENTER_LEFT);
+        statusBox.getChildren().addAll(loadingIndicator, validationLabel);
 
-        // Buttons
+        // Button section
         HBox buttonBox1 = new HBox(10);
         buttonBox1.getChildren().addAll(saveButton, updateButton);
 
         HBox buttonBox2 = new HBox(10);
         buttonBox2.getChildren().addAll(deleteButton, clearButton);
 
-        // Required fields note
+        // Required note
         Label requiredNote = new Label("* Field wajib diisi");
         requiredNote.getStyleClass().add("required-note");
 
         formSection.getChildren().addAll(
             formTitle,
             fieldsBox,
-            validationLabel,
+            statusBox,
             buttonBox1,
             buttonBox2,
             requiredNote
@@ -219,9 +194,6 @@ public class DosenView extends BorderPane {
         return formSection;
     }
 
-    /**
-     * Create table section
-     */
     private VBox createTableSection() {
         VBox tableSection = new VBox(15);
         tableSection.getStyleClass().add("table-section");
@@ -238,7 +210,7 @@ public class DosenView extends BorderPane {
 
         tableHeader.getChildren().addAll(tableTitle, spacer, refreshButton);
 
-        // Table with scroll
+        // Table
         VBox.setVgrow(dosenTable, Priority.ALWAYS);
 
         tableSection.getChildren().addAll(tableHeader, dosenTable);
@@ -247,206 +219,52 @@ public class DosenView extends BorderPane {
     }
 
     /**
-     * Setup event handlers
+     * Setup property bindings antara View dan ViewModel
      */
-    private void setupEventHandlers() {
-        // Table selection
-        dosenTable.getSelectionModel().selectedItemProperty().addListener(
-            (observable, oldValue, newValue) -> {
-                if (newValue != null) {
-                    selectDosen(newValue);
-                }
-            }
-        );
+   private void setupPropertyBindings() {
+    // Bind form fields to ViewModel properties (bidirectional)
+    nppField.textProperty().bindBidirectional(viewModel.nppProperty());
+    namaField.textProperty().bindBidirectional(viewModel.namaProperty());
+    noHpField.textProperty().bindBidirectional(viewModel.noHpProperty());
 
-        // Button actions (temporary - will be moved to ViewModel)
-        saveButton.setOnAction(e -> handleSave());
-        updateButton.setOnAction(e -> handleUpdate());
-        deleteButton.setOnAction(e -> handleDelete());
-        clearButton.setOnAction(e -> handleClear());
-        refreshButton.setOnAction(e -> handleRefresh());
+    // Bind table data
+    dosenTable.setItems(viewModel.getDosenList());
 
-        // Field validation (real-time)
-        nppField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
-        namaField.textProperty().addListener((obs, oldVal, newVal) -> validateForm());
-    }
+    // Bind button states to computed properties
+    saveButton.disableProperty().bind(viewModel.canSaveProperty().not());
+    updateButton.disableProperty().bind(viewModel.canUpdateProperty().not());
+    deleteButton.disableProperty().bind(viewModel.canDeleteProperty().not());
 
-    /**
-     * Setup component styling
-     */
-    private void setupStyling() {
-        getStyleClass().add("dosen-view");
-    }
+    // Bind loading indicator
+    loadingIndicator.visibleProperty().bind(viewModel.isLoadingProperty());
 
-    /**
-     * Select dosen and populate form
-     */
-    private void selectDosen(Dosen dosen) {
-        nppField.setText(dosen.getNpp());
-        namaField.setText(dosen.getNama());
-        noHpField.setText(dosen.getNoHp() != null ? dosen.getNoHp() : "");
+    // Bind validation message
+    validationLabel.textProperty().bind(viewModel.statusMessageProperty());
+    validationLabel.visibleProperty().bind(viewModel.statusMessageProperty().isNotEmpty());
 
-        // Enable/disable buttons
-        saveButton.setDisable(true);
-        updateButton.setDisable(false);
-        deleteButton.setDisable(false);
-
-        // Make NPP field read-only when updating
-        nppField.setEditable(false);
-
-        clearValidation();
-    }
-
-    /**
-     * Validate form and show/hide validation messages
-     */
-    private void validateForm() {
-        String npp = nppField.getText().trim();
-        String nama = namaField.getText().trim();
-
-        if (npp.isEmpty() || nama.isEmpty()) {
-            showValidation("NPP dan Nama harus diisi!", "error");
-            return;
-        }
-
-        if (npp.length() < 3) {
-            showValidation("NPP minimal 3 karakter!", "error");
-            return;
-        }
-
-        clearValidation();
-    }
-
-    /**
-     * Show validation message
-     */
-    private void showValidation(String message, String type) {
-        validationLabel.setText(message);
+    // Bind validation message style based on error state
+    viewModel.hasErrorProperty().addListener((obs, oldVal, newVal) -> {
         validationLabel.getStyleClass().removeAll("validation-error", "validation-success");
-        validationLabel.getStyleClass().add("validation-" + type);
-        validationLabel.setVisible(true);
-    }
-
-    /**
-     * Clear validation message
-     */
-    private void clearValidation() {
-        validationLabel.setVisible(false);
-    }
-
-    // === TEMPORARY EVENT HANDLERS (Will be moved to ViewModel) ===
-
-    private void handleSave() {
-        if (validateInput()) {
-            // Create new dosen object
-            Dosen newDosen = new Dosen(
-                nppField.getText().trim(),
-                namaField.getText().trim(),
-                noHpField.getText().trim().isEmpty() ? null : noHpField.getText().trim()
-            );
-
-            // Add to table (temporary)
-            dosenTable.getItems().add(newDosen);
-            showValidation("Data dosen berhasil disimpan!", "success");
-            handleClear();
+        if (newVal) {
+            validationLabel.getStyleClass().add("validation-error");
+        } else {
+            validationLabel.getStyleClass().add("validation-success");
         }
-    }
-
-    private void handleUpdate() {
-        Dosen selectedDosen = dosenTable.getSelectionModel().getSelectedItem();
-        if (selectedDosen != null && validateInput()) {
-            // Update selected dosen
-            selectedDosen.setNama(namaField.getText().trim());
-            selectedDosen.setNoHp(noHpField.getText().trim().isEmpty() ? null : noHpField.getText().trim());
-
-            // Refresh table
-            dosenTable.refresh();
-            showValidation("Data dosen berhasil diupdate!", "success");
-            handleClear();
-        }
-    }
-
-    private void handleDelete() {
-        Dosen selectedDosen = dosenTable.getSelectionModel().getSelectedItem();
-        if (selectedDosen != null) {
-            Alert confirmDialog = new Alert(Alert.AlertType.CONFIRMATION);
-            confirmDialog.setTitle("Konfirmasi Hapus");
-            confirmDialog.setHeaderText("Hapus Data Dosen");
-            confirmDialog.setContentText("Apakah Anda yakin ingin menghapus data dosen: " + selectedDosen.getNama() + "?");
-
-            if (confirmDialog.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
-                dosenTable.getItems().remove(selectedDosen);
-                showValidation("Data dosen berhasil dihapus!", "success");
-                handleClear();
-            }
-        }
-    }
-
-    private void handleClear() {
-        nppField.clear();
-        namaField.clear();
-        noHpField.clear();
-
-        nppField.setEditable(true);
-        saveButton.setDisable(false);
-        updateButton.setDisable(true);
-        deleteButton.setDisable(true);
-
-        dosenTable.getSelectionModel().clearSelection();
-        clearValidation();
-    }
-
-    private void handleRefresh() {
-        // Reload data from database (temporary - load sample data)
-        loadSampleData();
-        showValidation("Data berhasil di-refresh!", "success");
-    }
-
-    private boolean validateInput() {
-        String npp = nppField.getText().trim();
-        String nama = namaField.getText().trim();
-
-        if (npp.isEmpty()) {
-            showValidation("NPP tidak boleh kosong!", "error");
-            nppField.requestFocus();
-            return false;
-        }
-
-        if (nama.isEmpty()) {
-            showValidation("Nama tidak boleh kosong!", "error");
-            namaField.requestFocus();
-            return false;
-        }
-
-        if (npp.length() < 3) {
-            showValidation("NPP minimal 3 karakter!", "error");
-            nppField.requestFocus();
-            return false;
-        }
-
-        // Check duplicate NPP (only for new records)
-        if (saveButton.isDisabled() == false) {
-            for (Dosen dosen : dosenTable.getItems()) {
-                if (dosen.getNpp().equals(npp)) {
-                    showValidation("NPP sudah ada! Gunakan NPP yang lain.", "error");
-                    nppField.requestFocus();
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    private void loadSampleData() {
-        dosenTable.getItems().clear();
-
-        // Sample data
-        dosenTable.getItems().addAll(
-            new Dosen("NPP001", "Dr. Ahmad Fauzi, M.Kom", "08123456789"),
-            new Dosen("NPP002", "Dr. Siti Rahayu, M.T", "08234567890"),
-            new Dosen("NPP003", "Prof. Budi Santoso, Ph.D", "08345678901"),
-            new Dosen("NPP004", "Dr. Rina Kartika, M.Sc", "08456789012")
-        );
-    }
+    });
 }
+
+private void setupEventHandlers() {
+    saveButton.setOnAction(e -> viewModel.saveCommand());
+    updateButton.setOnAction(e -> viewModel.updateCommand());
+    deleteButton.setOnAction(e -> viewModel.deleteCommand());
+    clearButton.setOnAction(e -> viewModel.clearForm());
+    refreshButton.setOnAction(e -> viewModel.loadAllDosen());
+    
+    dosenTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+        viewModel.selectDosen(newVal);
+    });
+}
+
+private void setupStyling() {
+        getStyleClass().add("dosen-view");
+    }}
