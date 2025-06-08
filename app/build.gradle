@@ -1,0 +1,47 @@
+plugins {
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Testing
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // JavaFX Dependencies
+    implementation 'org.openjfx:javafx-controls:21.0.1'
+    implementation 'org.openjfx:javafx-fxml:21.0.1'
+
+    // SQLite Database
+    implementation 'org.xerial:sqlite-jdbc:3.44.1.0'
+
+    // Utility (Optional - untuk helper functions)
+    implementation 'com.google.guava:guava:31.1-jre'
+}
+
+// Java toolchain
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+// JavaFX configuration
+javafx {
+    version = '21.0.1'
+    modules = ['javafx.controls', 'javafx.fxml']
+}
+
+// Application configuration
+application {
+    mainClass = 'akademik.AkademikApp'
+}
+
+// Test configuration
+tasks.named('test') {
+    useJUnitPlatform()
+}
