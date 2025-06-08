@@ -1,0 +1,378 @@
+/* ===== ROOT STYLES ===== */
+.root {
+    -fx-font-family: "Segoe UI", "Roboto", "Arial", sans-serif;
+    -fx-font-size: 14px;
+    -fx-background-color: #f8f9fa;
+}
+
+/* ===== APPLICATION LAYOUT ===== */
+.root-pane {
+    -fx-background-color: #ffffff;
+}
+
+.app-header {
+    -fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 2);
+}
+
+.main-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.subtitle {
+    -fx-font-size: 16px;
+    -fx-text-fill: #e8e8e8;
+    -fx-font-weight: normal;
+}
+
+.app-footer {
+    -fx-background-color: #2c3e50;
+    -fx-border-color: #34495e;
+    -fx-border-width: 1 0 0 0;
+}
+
+.footer-text {
+    -fx-text-fill: #bdc3c7;
+    -fx-font-size: 12px;
+}
+
+/* ===== TAB PANE ===== */
+.main-tab-pane {
+    -fx-background-color: #ffffff;
+}
+
+.main-tab-pane .tab-header-area {
+    -fx-background-color: #ecf0f1;
+    -fx-border-color: #bdc3c7;
+    -fx-border-width: 0 0 1 0;
+}
+
+.main-tab-pane .tab {
+    -fx-background-color: #ecf0f1;
+    -fx-background-radius: 8 8 0 0;
+    -fx-border-color: #bdc3c7;
+    -fx-border-width: 1 1 0 1;
+    -fx-border-radius: 8 8 0 0;
+    -fx-padding: 10 20 10 20;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.main-tab-pane .tab:selected {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #2c3e50;
+}
+
+.main-tab-pane .tab:hover {
+    -fx-background-color: #d5dbdb;
+}
+
+.main-tab-pane .tab-content-area {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent;
+}
+
+/* ===== FORM SECTIONS ===== */
+.form-section {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}
+
+.table-section {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);
+    -fx-padding: 20;
+}
+
+.section-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+/* ===== FORM FIELDS ===== */
+.form-field {
+    -fx-pref-height: 40px;
+    -fx-font-size: 14px;
+    -fx-border-color: #ced4da;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-background-color: #ffffff;
+    -fx-padding: 0 12 0 12;
+}
+
+.form-field:focused {
+    -fx-border-color: #667eea;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(three-pass-box, rgba(102, 126, 234, 0.3), 5, 0, 0, 0);
+}
+
+.field-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #495057;
+}
+
+.field-helper {
+    -fx-font-size: 11px;
+    -fx-text-fill: #6c757d;
+    -fx-font-style: italic;
+}
+
+.required-note {
+    -fx-font-size: 12px;
+    -fx-text-fill: #dc3545;
+    -fx-font-style: italic;
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+    -fx-pref-height: 38px;
+    -fx-pref-width: 120px;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 3, 0, 0, 1);
+}
+
+.btn-primary {
+    -fx-background-color: #667eea;
+    -fx-text-fill: white;
+    -fx-border-color: #667eea;
+    -fx-border-width: 1;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #5a6fd8;
+    -fx-border-color: #5a6fd8;
+    -fx-effect: dropshadow(three-pass-box, rgba(102, 126, 234, 0.4), 5, 0, 0, 2);
+}
+
+.btn-primary:pressed {
+    -fx-background-color: #4c63d2;
+    -fx-border-color: #4c63d2;
+}
+
+.btn-secondary {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
+    -fx-border-color: #6c757d;
+    -fx-border-width: 1;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #5a6268;
+    -fx-border-color: #5a6268;
+}
+
+.btn-danger {
+    -fx-background-color: #dc3545;
+    -fx-text-fill: white;
+    -fx-border-color: #dc3545;
+    -fx-border-width: 1;
+}
+
+.btn-danger:hover {
+    -fx-background-color: #c82333;
+    -fx-border-color: #c82333;
+}
+
+.btn-outline {
+    -fx-background-color: transparent;
+    -fx-text-fill: #667eea;
+    -fx-border-color: #667eea;
+    -fx-border-width: 1;
+}
+
+.btn-outline:hover {
+    -fx-background-color: #667eea;
+    -fx-text-fill: white;
+}
+
+.btn:disabled {
+    -fx-background-color: #e9ecef;
+    -fx-text-fill: #6c757d;
+    -fx-border-color: #e9ecef;
+    -fx-opacity: 0.6;
+    -fx-effect: none;
+}
+
+/* ===== VALIDATION MESSAGES ===== */
+.validation-message {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 12 8 12;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.validation-error {
+    -fx-background-color: #f8d7da;
+    -fx-text-fill: #721c24;
+    -fx-border-color: #f5c6cb;
+    -fx-border-width: 1;
+}
+
+.validation-success {
+    -fx-background-color: #d4edda;
+    -fx-text-fill: #155724;
+    -fx-border-color: #c3e6cb;
+    -fx-border-width: 1;
+}
+
+/* ===== TABLE STYLES ===== */
+.data-table {
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-background-color: #ffffff;
+}
+
+.data-table .column-header-background {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 0 0 1 0;
+}
+
+.data-table .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 0 1 0 0;
+    -fx-font-weight: bold;
+    -fx-text-fill: #495057;
+    -fx-alignment: center-left;
+    -fx-padding: 12 8 12 8;
+}
+
+.data-table .table-row-cell {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #f8f9fa;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 8;
+}
+
+.data-table .table-row-cell:odd {
+    -fx-background-color: #f8f9fa;
+}
+
+.data-table .table-row-cell:selected {
+    -fx-background-color: #667eea;
+    -fx-text-fill: white;
+}
+
+.data-table .table-row-cell:hover {
+    -fx-background-color: #e3f2fd;
+}
+
+.data-table .table-row-cell:selected:hover {
+    -fx-background-color: #5a6fd8;
+}
+
+.data-table .table-cell {
+    -fx-border-color: transparent;
+    -fx-padding: 8 12 8 12;
+    -fx-alignment: center-left;
+}
+
+/* ===== COMBO BOX STYLES ===== */
+.combo-box {
+    -fx-pref-height: 40px;
+    -fx-font-size: 14px;
+}
+
+.combo-box-base {
+    -fx-border-color: #ced4da;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-background-color: #ffffff;
+}
+
+.combo-box-base:focused {
+    -fx-border-color: #667eea;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(three-pass-box, rgba(102, 126, 234, 0.3), 5, 0, 0, 0);
+}
+
+.combo-box .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #495057;
+    -fx-padding: 8 12 8 12;
+}
+
+.combo-box .list-cell:hover {
+    -fx-background-color: #e3f2fd;
+}
+
+.combo-box .list-cell:selected {
+    -fx-background-color: #667eea;
+    -fx-text-fill: white;
+}
+
+/* ===== SCROLL BAR STYLES ===== */
+.scroll-bar {
+    -fx-background-color: #f8f9fa;
+}
+
+.scroll-bar .track {
+    -fx-background-color: #f8f9fa;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #ced4da;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #adb5bd;
+}
+
+.scroll-bar .thumb:pressed {
+    -fx-background-color: #6c757d;
+}
+
+/* ===== STATS LABEL ===== */
+.stats-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #6c757d;
+    -fx-font-style: italic;
+    -fx-padding: 0 10 0 0;
+}
+
+/* ===== VIEW SPECIFIC STYLES ===== */
+.dosen-view, .mahasiswa-view {
+    -fx-background-color: #f8f9fa;
+}
+
+/* ===== HOVER EFFECTS ===== */
+.form-section:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 8, 0, 0, 3);
+}
+
+.table-section:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 8, 0, 0, 3);
+}
+
+/* ===== FOCUS INDICATORS ===== */
+.form-field:focused,
+.combo-box-base:focused {
+    -fx-effect: dropshadow(three-pass-box, rgba(102, 126, 234, 0.4), 8, 0, 0, 0);
+}
+
