@@ -1,15 +1,19 @@
 package akademik;
 
-import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.stage.Stage;
 import akademik.database.DatabaseConnection;
 import akademik.util.DatabaseTester;
 import akademik.view.DosenView;
 import akademik.view.MahasiswaView;
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 /**
  * Main Application Class untuk Sistem Akademik
@@ -171,4 +175,4 @@ private String createStylesheet() {
         return null;
     }
 }
-
+}
